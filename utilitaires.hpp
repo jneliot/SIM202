@@ -6,9 +6,9 @@
 
 
 //---------------------------------------------------------------------------
-//     classe Pint ( pair<int,int>)
+//     classe Pfloat ( pair<float,float>)
 //---------------------------------------------------------------------------
-typedef pair<int,int> Pint;
+typedef pair<float,float> Pfloat;
 
 
 #endif

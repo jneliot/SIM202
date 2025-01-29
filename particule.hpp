@@ -14,9 +14,9 @@ using namespace std;
 class Particule
 {
     public:
-    Pint position = {0,0};
-    Pint vitesse = {0,0};
-    Pint force = {0,0};
+    Pfloat position = {0,0};
+    Pfloat vitesse = {0,0};
+    Pfloat force = {0,0};
 };
 
 class Monde : public vector<Particule>
