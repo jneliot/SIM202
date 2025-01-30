@@ -23,9 +23,23 @@ class Boite
     Boite* fille = 0;
     Boite* soeur = 0;
 
-    inline bool vide();
+    //Constructeurs
+    Boite(Boite mere);
+
+    //Fonctions membres
+    inline bool vide(); //Vérifie si la boite est vide ou non
+    inline void update(Pfloat force, float dt); //mise à jour de la particule pour passer à l'itération suivante
 
 };
+
+
+//===================================================================
+//                       Constructeurs
+Boite::Boite(Boite mere)
+{
+
+}
+
 
 //===================================================================
 //                       Fonctions membres
@@ -34,6 +48,7 @@ inline bool Boite::vide(){
     if((*this).part == 0){return 1;}
     return 0;
 }
+
 
 //===================================================================
 //                       Fonctions externes
