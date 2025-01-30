@@ -46,6 +46,8 @@ Boite::Boite(Boite* constru, int indic)
 
         centre.first = (*constru).centre + coor_max/(2^(*constru).nv); //La nouvelle boîte si elle est fille de constru est celle en haut à gauche
         centre.second = (*constru).centre - coor_max/(2^(*constru).nv);
+
+        
          
 
 
