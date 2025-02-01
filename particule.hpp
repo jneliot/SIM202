@@ -2,8 +2,9 @@
 #define PARTICULE_HPP
 
 #include <iostream>
-#include "utilitaires.hpp"
 #include <vector>
+#include "parametres.hpp"
+#include "utilitaires.hpp"
 
 using namespace std;
 
@@ -23,14 +24,20 @@ class Particule
     Particule(Pfloat pos, Pfloat vit, Pfloat force, float masse);
 
     //Fonctions membres
-    inline void update(Pfloat force, float dt); //mise à jour de la particule pour passer à l'itération suivante
+    inline void update(); //Mise à jour de la particule pour passer à l'itération suivante
     inline Pfloat force(); //Détermihation de la force totale appliquée à la particule
 
 };
 
 //===================================================================
 //                       Constructeurs
-
+inline Particule::Particule(Pfloat pos, Pfloat vit, Pfloat force, float m)
+{
+    position = pos;
+    vitesse = vit;
+    F = force;
+    masse = m;
+}
 
 
 //===================================================================
@@ -40,6 +47,13 @@ inline Pfloat Particule::force()
 
 }
 
+inline void Particule::update()
+{
+    (*this).vitesse += dt*(*this).F/(*this).masse; //Attention, on travaille sur des float (dt,v) et des doublets (F, position)
+    (*this).position += dt*(*this).vitesse;
+
+    (*this).F = (*this).force();
+}
 
 //===================================================================
 //                       classe Monde
