@@ -19,39 +19,30 @@ class Boite
     Pfloat centre = {0,0}; //centre de la boite
     Pfloat centre_masse = {0,0}; //centre de masse de la boite
     int masse = 0; 
-    Particule* part = 0;
-    Boite* fille = 0;
+    Particule* particule = 0;
+    Boite* filles[4] = {0,0,0,0};
     Boite* soeur = 0;
 
     //Constructeurs
-    Boite(Boite* constru, int indic);
+    Boite(double x, double y, int niveau);
 
     //Fonctions membres
     inline bool vide(); //Vérifie si la boite est vide ou non
-    inline void update(Pfloat force); //mise à jour de la particule pour passer à l'itération suivante
-
+    inline void subdiviser(); //Subdiviser en 4 une boîte quand les particules sont plusieurs dans celle-ci
+    inline void ajouter_particule(Particule* particule); //Ajouter une particule à la boîte + subdivision si nécessaire
+    inline bool contient(Particule* particule); //Vérifier si une particule est dans la boîte ou non
+    inline void maj_centre_masse(Particule* particule); //Mettre à jour les masse et centre de masse après ajout d'une particule dans une boîte fille
 };
 
 
 //===================================================================
 //                       Constructeurs
-Boite::Boite(Boite* constru, int indic) 
+Boite::Boite(double x, double y, int niveau) 
 {
-    if((indic!=1)&&(indic!=0)){cout<<"Construction error: invalid indicator";exit(-1);}
+    nv = niveau;
 
-    //Indic = 0 => constru = mere
-    if(indic == 0)
-    {
-        nv = (*constru).nv +1;
-
-        centre.first = (*constru).centre + coor_max/(2^(*constru).nv); //La nouvelle boîte si elle est fille de constru est celle en haut à gauche
-        centre.second = (*constru).centre - coor_max/(2^(*constru).nv);
-
-        
-         
-
-
-    }
+    centre.first = x;
+    centre.second = y;
 }
 
 
@@ -59,11 +50,68 @@ Boite::Boite(Boite* constru, int indic)
 //                       Fonctions membres
 
 inline bool Boite::vide(){
-    if((*this).part == 0){return 1;}
+    if((*this).particule == 0){return 1;}
     return 0;
 }
 
+inline void Boite::subdiviser() {
+    int idx = 0;
+    double taille = coor_max/(2^(this->nv));
+    for (int dx : {-taille, taille}) {
+        for (int dy : {-taille, taille}) {
+            double x = centre[0] + dx;
+            double y = centre[1] + dy;
+            this->filles[idx] = new Boite(x, y, this->nv + 1);
+            if (idx > 0) {
+                this->filles[idx-1]->soeur = this->filles[idx];
+            idx++;
+            }
+        }
+    }
+}
 
+inline bool Boite::contient(Particule* particule) 
+{
+    double taille = coor_max/(2^(this->nv));
+    return std::abs(particule->position[0] - centre[0]) <= taille &&
+           std::abs(particule->position[1] - centre[1]) <= taille &&
+            std::abs(particule->position[2] - centre[2]) <= taille;
+}
+
+inline void Boite::maj_centre_masse(Particule* particule)
+{
+    centre_masse.first += particule->position.first * particule->masse;
+    centre_masse.second += particule->position.second * particule->masse;
+    masse += particule->masse;
+}
+
+inline void Boite::ajouter_particule(Particule* particule) 
+{
+    if (!this->particule) //Si la particule à ajouter est seule
+    {
+        this->particule = particule;
+        centre_masse[0] = particule->position[0];
+        centre_masse[1] = particule->position[1];
+        centre_masse[2] = particule->position[2];
+        masse = particule->masse;
+    } 
+    else  //Si elle n'est pas seule, il faut la mettre dans une boîte fille
+    {
+        if(!this->filles[0]) //Subdiviser si cela n'a pas été déjà fait
+        {
+            subdiviser();
+        }
+        for (auto& boite:filles) 
+        {
+            if (boite->contient(particule)) 
+            {
+                boite->ajouter_particule(particule);
+                maj_centre_masse(particule);
+                break;
+            }
+        }
+    }
+}
 //===================================================================
 //                       Fonctions externes
 
