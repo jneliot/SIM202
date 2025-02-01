@@ -24,8 +24,21 @@ class Particule
 
     //Fonctions membres
     inline void update(Pfloat force, float dt); //mise à jour de la particule pour passer à l'itération suivante
+    inline Pfloat force(); //Détermihation de la force totale appliquée à la particule
 
 };
+
+//===================================================================
+//                       Constructeurs
+
+
+
+//===================================================================
+//                       Fonctions membres
+inline Pfloat Particule::force()
+{
+
+}
 
 
 //===================================================================
@@ -51,4 +64,5 @@ inline void Monde::init(Pfloat pos, Pfloat vit, Pfloat Force)
         part.vitesse += dt*part.F/(2*part.masse); //v^1/2
     }
 }
+
 #endif
