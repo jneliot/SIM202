@@ -10,7 +10,7 @@ using namespace std;
 
 //===================================================================
 //                       classe Boîte
-// représenté par ses niveau,centre, centre de masse, masse, particules (ptr), boîte fille (ptr), boîte sur (ptr)
+// représenté par ses niveau,centre, centre de masse, masse, particules (ptr), boîte fille (ptr), boîte soeur (ptr)
 //===================================================================
 class Boite
 {
@@ -80,9 +80,9 @@ inline bool Boite::contient(Particule* particule)
 
 inline void Boite::maj_centre_masse(Particule* particule)
 {
-    centre_masse.first += particule->position.first * particule->masse;
-    centre_masse.second += particule->position.second * particule->masse;
     masse += particule->masse;
+    centre_masse.first += particule->position.first * particule->masse/masse;
+    centre_masse.second += particule->position.second * particule->masse/masse;
 }
 
 inline void Boite::ajouter_particule(Particule* particule) 

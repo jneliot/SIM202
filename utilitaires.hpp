@@ -3,6 +3,7 @@
 #define UTILITAIRES_HPP
 
 #include <utility>
+#include <math.h>
 
 
 //---------------------------------------------------------------------------
@@ -10,5 +11,8 @@
 //---------------------------------------------------------------------------
 typedef pair<float,float> Pfloat;
 
+double distance(double* a, double* b) {
+    return sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));
+}
 
 #endif
